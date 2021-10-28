@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "939879530589",
+    "firebase_url": "https://barber--promo-default-rtdb.firebaseio.com",
+    "project_id": "barber--promo",
+    "storage_bucket": "barber--promo.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:939879530589:android:3a805791de30b822ce8db4",
+        "android_client_info": {
+          "package_name": "com.barber_promo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "939879530589-etp67ut3pho9s63ifivtv37ddftpkgib.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDiTBLs5KT-1eqf9zYeMs0uo5BOxnJ1gYk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "939879530589-etp67ut3pho9s63ifivtv37ddftpkgib.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
