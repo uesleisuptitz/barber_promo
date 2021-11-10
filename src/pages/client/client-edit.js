@@ -1,12 +1,13 @@
 import React, {useCallback, useState, useEffect} from 'react';
-import {StyleSheet, Alert} from 'react-native';
+import {StyleSheet} from 'react-native';
 import {COLORS} from '../../assets';
 import {Modal, Input} from '../../components';
 import {firestore} from '../../services';
-import {useAuth, useClient} from '../../context';
+import {useAuth, useClient, useNotification} from '../../context';
 
 const ClientEdit = ({open, onClose = () => {}}) => {
   const {user} = useAuth();
+  const {handleNotification} = useNotification();
   const {name, docId, setName} = useClient();
   const [newClientName, setNewClientName] = useState(name);
   const [savingUser, setSavingUser] = useState(false);
@@ -22,17 +23,20 @@ const ClientEdit = ({open, onClose = () => {}}) => {
       .then(() => {
         setName(newClientName);
         onClose();
-        Alert.alert('Pronto!', 'Seu cliente foi alterado com sucesso!');
+        handleNotification(
+          'sucess',
+          'Pronto! Seu cliente foi alterado com sucesso!',
+        );
         setSavingUser(false);
       })
       .catch(() => {
-        Alert.alert(
-          'Ops!',
-          'Ocorreu um erro ao tentar salvar suas alterações!',
+        handleNotification(
+          'error',
+          'Ops! Ocorreu um erro ao tentar salvar suas alterações!',
         );
         setSavingUser(false);
       });
-  }, [newClientName, docId]);
+  }, [user.uid, docId, newClientName, setName, onClose, handleNotification]);
 
   return (
     <Modal
@@ -48,7 +52,7 @@ const ClientEdit = ({open, onClose = () => {}}) => {
       <Input
         placeholder="Nome do cliente"
         autoCapitalize="words"
-        style={{maxWidth: '100%'}}
+        style={s.inputName}
         disabled={savingUser}
         value={newClientName}
         onChangeText={v => setNewClientName(v)}
@@ -85,4 +89,5 @@ const s = StyleSheet.create({
     height: 15,
   },
   saveClientButton: {alignSelf: 'flex-end', marginVertical: 10, height: 45},
+  inputName: {maxWidth: '100%'},
 });

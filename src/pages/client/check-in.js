@@ -1,13 +1,14 @@
 import React, {useCallback, useState} from 'react';
-import {StyleSheet, Image, Text, TouchableOpacity, Alert} from 'react-native';
+import {StyleSheet, Image, Text, TouchableOpacity} from 'react-native';
 import {COLORS, ICONS} from '../../assets';
 import {Modal} from '../../components';
 import {firestore, firebase} from '../../services';
-import {useAuth, useClient, useTheme} from '../../context';
+import {useAuth, useClient, useNotification, useTheme} from '../../context';
 
 const CheckIn = () => {
   const {user} = useAuth();
   const {text} = useTheme();
+  const {handleNotification} = useNotification();
   const {promotionFrequency} = user;
   const {
     docId,
@@ -43,22 +44,28 @@ const CheckIn = () => {
             totalFrequency: firebase.firestore.FieldValue.increment(1),
           });
           setTotalFrequency(totalFrequency + 1);
-          if (lastServiceIsAFreeService) setLastServiceIsAFreeService(false);
+          if (lastServiceIsAFreeService) {
+            setLastServiceIsAFreeService(false);
+          }
         }
         setModalIsOpen(false);
-        Alert.alert('Pronto!', 'Check-in realizado com sucesso!');
+        handleNotification('sucess', 'Check-in realizado com sucesso!');
       })
       .catch(() =>
-        Alert.alert('Ops!', 'Ocorreu um erro ao tentar realizar o check-in!'),
+        handleNotification(
+          'error',
+          'Ops! Ocorreu um erro ao tentar realizar o check-in!',
+        ),
       )
       .finally(() => setCheckingIn(false));
   }, [
-    docId,
-    user,
     totalFrequency,
-    setTotalFrequency,
     promotionFrequency,
     lastServiceIsAFreeService,
+    user.uid,
+    docId,
+    handleNotification,
+    setTotalFrequency,
     setLastServiceIsAFreeService,
   ]);
 

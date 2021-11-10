@@ -1,12 +1,13 @@
 import React, {useCallback, useState} from 'react';
-import {StyleSheet, Image, Text, TouchableOpacity, Alert} from 'react-native';
+import {StyleSheet, Image, Text, TouchableOpacity} from 'react-native';
 import {COLORS, ICONS} from '../../assets';
 import {Modal, Input} from '../../components';
 import {firestore} from '../../services';
-import {useAuth, useClients, useTheme} from '../../context';
+import {useAuth, useClients, useNotification, useTheme} from '../../context';
 
 const AddClient = () => {
   const {user} = useAuth();
+  const {handleNotification} = useNotification();
   const {clients} = useClients();
   const {text} = useTheme();
 
@@ -21,15 +22,21 @@ const AddClient = () => {
       .add({name: clientName})
       .then(() => {
         setModalIsOpen(false);
-        Alert.alert('Pronto!', 'Seu cliente foi cadastrado com sucesso!');
+        handleNotification(
+          'sucess',
+          'Pronto! Seu cliente foi cadastrado com sucesso!',
+        );
         setCreatingClient(false);
         setClientName('');
       })
       .catch(() => {
-        Alert.alert('Ops!', 'Ocorreu um erro ao tentar cadastrar seu cliente!');
+        handleNotification(
+          'error',
+          'Ops! Ocorreu um erro ao tentar cadastrar seu cliente!',
+        );
         setCreatingClient(false);
       });
-  }, [clientName]);
+  }, [clientName, handleNotification, user.uid]);
 
   let alreadyHasClientName = clients.some(({name}) => name === clientName);
 
@@ -54,12 +61,12 @@ const AddClient = () => {
         <Input
           placeholder="Nome do cliente"
           autoCapitalize="words"
-          style={{maxWidth: '100%'}}
+          style={s.inputName}
           disabled={creatingClient}
           value={clientName}
           onChangeText={v => setClientName(v)}
         />
-        {alreadyHasClientName && (
+        {alreadyHasClientName && !creatingClient && (
           <Text style={[s.warning, {color: text}]}>
             Já existe um cliente com esse nome!
           </Text>
@@ -119,4 +126,5 @@ const s = StyleSheet.create({
   warning: {
     textAlign: 'center',
   },
+  inputName: {maxWidth: '100%'},
 });

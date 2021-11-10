@@ -15,6 +15,7 @@ export const ICONS = {
   light: require('./icons/light.png'),
   promotion: require('./icons/promotion.png'),
   delete: require('./icons/delete.png'),
+  warning: require('./icons/warning.png'),
 };
 export const IMAGES = {
   barberSaloom: require('./images/barber-saloom.png'),

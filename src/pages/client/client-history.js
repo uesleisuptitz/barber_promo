@@ -6,10 +6,9 @@ import {
   Image,
   FlatList,
   ActivityIndicator,
-  Alert,
 } from 'react-native';
 import {COLORS, ICONS, IMAGES} from '../../assets';
-import {useAuth, useClient, useTheme} from '../../context';
+import {useAuth, useClient, useNotification, useTheme} from '../../context';
 import {firestore} from '../../services';
 import moment from 'moment';
 
@@ -17,6 +16,7 @@ const ClientHistory = () => {
   const {user} = useAuth();
   const {docId, setLastServiceIsAFreeService} = useClient();
   const {background, text} = useTheme();
+  const {handleNotification} = useNotification();
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -24,7 +24,7 @@ const ClientHistory = () => {
     if (user?.uid) {
       const handleSetClientHistory = snapshot => {
         let changes = snapshot.docChanges();
-        if (changes.length > 0)
+        if (changes.length > 0) {
           changes.forEach((change, index) => {
             if (change.type === 'added') {
               setHistory(oldHistory => [
@@ -44,17 +44,21 @@ const ClientHistory = () => {
                 ),
               );
             }
-            if (index + 1 === changes.length) setLoading(false);
+            if (index + 1 === changes.length) {
+              setLoading(false);
+            }
           });
-        else setLoading(false);
+        } else {
+          setLoading(false);
+        }
       };
       const query = firestore()
         .collection(`users/${user.uid}/clients/${docId}/history`)
         .orderBy('date');
       const unsuscribe = query.onSnapshot(handleSetClientHistory, () =>
-        Alert.alert(
-          'Ops!',
-          'Ocorreu um erro ao tentar buscar o histórico desse cliente!',
+        handleNotification(
+          'error',
+          'Ops! Ocorreu um erro ao tentar buscar o histórico desse cliente!',
         ),
       );
       return () => {
@@ -63,7 +67,7 @@ const ClientHistory = () => {
         setLoading(true);
       };
     }
-  }, [docId, user]);
+  }, [docId, handleNotification, user]);
 
   useEffect(() => {
     if (history?.length > 0 && history[0].freeService) {
@@ -77,12 +81,12 @@ const ClientHistory = () => {
       {loading ? (
         <ActivityIndicator
           color={COLORS.primary}
-          style={{marginTop: '45%'}}
+          style={s.loading}
           size={'large'}
         />
       ) : (
         <FlatList
-          style={{width: '100%', backgroundColor: background}}
+          style={[s.listContainer, {backgroundColor: background}]}
           data={history ? history.sort((a, b) => b.date - a.date) : []}
           indicatorStyle={'black'}
           scrollEnabled={history.length > 0}
@@ -126,7 +130,7 @@ const s = StyleSheet.create({
   emptyText: {
     color: COLORS.lightGray,
     fontSize: 15,
-    marginTop: -150,
+    marginTop: -120,
     marginBottom: 250,
   },
   emptyImage: {
@@ -153,4 +157,6 @@ const s = StyleSheet.create({
     tintColor: COLORS.primary,
     marginRight: 10,
   },
+  loading: {marginTop: '45%'},
+  listContainer: {width: '100%'},
 });

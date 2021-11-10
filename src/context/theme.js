@@ -9,7 +9,6 @@ import {COLORS} from '../assets';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ThemeContext = createContext({
-  primary: '',
   background: '',
   text: '',
   isDarkMode: false,
@@ -17,7 +16,6 @@ const ThemeContext = createContext({
 });
 
 export const ThemeProvider = ({children}) => {
-  const [primary, setPrimary] = useState(COLORS.primary);
   const [background, setBackground] = useState(COLORS.white);
   const [text, setText] = useState(COLORS.gray);
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -51,7 +49,13 @@ export const ThemeProvider = ({children}) => {
 
   return (
     <ThemeContext.Provider
-      value={{primary, background, text, switchTheme, isDarkMode}}>
+      value={{
+        primary: COLORS.primary,
+        background,
+        text,
+        switchTheme,
+        isDarkMode,
+      }}>
       {children}
     </ThemeContext.Provider>
   );

@@ -1,11 +1,12 @@
 import React, {useCallback, useState} from 'react';
-import {StyleSheet, Image, Text, TouchableOpacity, Alert} from 'react-native';
+import {StyleSheet, Image, Text, TouchableOpacity} from 'react-native';
 import {COLORS, ICONS} from '../../assets';
 import {Modal} from '../../components';
 import {firestore} from '../../services';
-import {useAuth, useClient, useTheme} from '../../context';
+import {useAuth, useClient, useNotification, useTheme} from '../../context';
 
 const CheckIn = ({navigation}) => {
+  const {handleNotification} = useNotification();
   const {user} = useAuth();
   const {text} = useTheme();
   const {docId, name} = useClient();
@@ -20,14 +21,17 @@ const CheckIn = ({navigation}) => {
       .delete()
       .then(() => {
         setModalIsOpen(false);
-        Alert.alert('Pronto!', 'Cliente excluído com sucesso!');
+        handleNotification('sucess', 'Pronto! Cliente excluído com sucesso!');
         navigation.navigate('Home');
       })
       .catch(() =>
-        Alert.alert('Ops!', 'Ocorreu um erro ao tentar excluir o cliente!'),
+        handleNotification(
+          'error',
+          'Ops! Ocorreu um erro ao tentar excluir o cliente!',
+        ),
       )
       .finally(() => setDeleting(false));
-  }, [docId, user]);
+  }, [docId, handleNotification, navigation, user.uid]);
 
   return (
     <>

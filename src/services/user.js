@@ -30,7 +30,9 @@ const verifyLogin = () =>
       if (user) {
         let {uid, displayName: name, email} = user;
         resolve({uid, name, email});
-      } else reject();
+      } else {
+        reject();
+      }
     });
   });
 

@@ -73,11 +73,9 @@ const Clients = ({navigation}) => {
             navigation.navigate('Client');
           }}>
           <View style={s.clientFirstLetter}>
-            <Text style={{color: COLORS.white, fontSize: 18}}>
-              {item.name[0]}
-            </Text>
+            <Text style={s.firstLetter}>{item.name[0]}</Text>
           </View>
-          <Text style={{color: text, fontSize: 17}}>{item.name}</Text>
+          <Text style={[s.name, {color: text}]}>{item.name}</Text>
         </TouchableOpacity>
       )}
       keyExtractor={item => item.docId}
@@ -130,4 +128,6 @@ const s = StyleSheet.create({
     marginTop: 50,
     textAlign: 'center',
   },
+  firstLetter: {color: COLORS.white, fontSize: 18},
+  name: {fontSize: 17},
 });

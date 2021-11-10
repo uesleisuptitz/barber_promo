@@ -7,7 +7,7 @@ import React, {
 } from 'react';
 import {useAuth} from './auth';
 import {firestore} from '../services';
-import {Alert} from 'react-native';
+import {useNotification} from '.';
 
 const ClientsContext = createContext({
   clients: [],
@@ -21,6 +21,7 @@ const ClientsContext = createContext({
 
 export const ClientsProvider = ({children}) => {
   const {user} = useAuth();
+  const {handleNotification} = useNotification();
   const [clients, setClients] = useState([]);
   const [clientsFiltered, setClientsFiltered] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -60,19 +61,24 @@ export const ClientsProvider = ({children}) => {
       };
       const query = firestore().collection(`users/${user.uid}/clients`);
       const unsuscribe = query.onSnapshot(handleGetClients, () =>
-        Alert.alert('Ops!', 'Ocorreu um erro ao tentar buscar seus clientes!'),
+        handleNotification(
+          'error',
+          'Ops! Ocorreu um erro ao tentar buscar seus clientes!',
+        ),
       );
       return () => {
         unsuscribe();
       };
     }
-  }, []);
+  }, [handleNotification, user.uid]);
 
-  const clearStringToSarch = useCallback(string =>
-    string
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '')
-      .toLowerCase(),
+  const clearStringToSarch = useCallback(
+    string =>
+      string
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase(),
+    [],
   );
 
   const handleSearchClients = useCallback(
@@ -84,7 +90,7 @@ export const ClientsProvider = ({children}) => {
       );
       setClientsFiltered(filtered);
     },
-    [clients, setClientsFiltered],
+    [clearStringToSarch, clients],
   );
   const handleClearSearch = useCallback(() => setClientsFiltered([]), []);
   const handleOpenOrCloseSearch = useCallback(
@@ -109,107 +115,3 @@ export const ClientsProvider = ({children}) => {
 };
 
 export const useClients = () => useContext(ClientsContext);
-
-//@todo apagar mock de nomes
-const mock = [
-  'Absalão',
-  'Janira',
-  'Ary',
-  'Camilla',
-  'Isabella',
-  'Iasmin',
-  'Liliana',
-  'Milena',
-  'Cristóvão',
-  'Arthur',
-  'Afonso',
-  'Laryssa',
-  'Guilherme',
-  'Ahmad',
-  'Anabel',
-  'Polina',
-  'Jael',
-  'Rebecca',
-  'Artyom',
-  'Christian',
-  'Fábia',
-  'Oziel',
-  'Eric',
-  'Delfim',
-  'Kevyn',
-  'Enzo',
-  'Hossana',
-  'Armindo',
-  'Dara',
-  'Isael',
-  'Delia',
-  'Ezequiel',
-  'Kiara',
-  'Yasmin',
-  'Manuela',
-  'Ashley',
-  'Maksim',
-  'Lucy',
-  'Lina',
-  'Keven',
-  'Henzo',
-  'Jairo',
-  'Derek',
-  'Denzel',
-  'Alice',
-  'Sabrina',
-  'Nélia',
-  'Neide',
-  'Alvin',
-  'Lívia',
-  'Alonso',
-  'Uriel',
-  'Kian',
-  'Letízia',
-  'Francesco',
-  'Léon',
-  'Jennifer',
-  'Abrão',
-  'Eduarda',
-  'Luzia',
-  'Suri',
-  'Liliane',
-  'Dominika',
-  'Mikael',
-  'KellY',
-  'Jandira',
-  'Nayara',
-  'Chloé',
-  'Nayla',
-  'Viviana',
-  'Brayan',
-  'Martinha',
-  'Nour',
-  'Marília',
-  'Clarinha',
-  'Eliana',
-  'Naísa',
-  'Kendra',
-  'Ananda',
-  'Evandro',
-  'Viktoriya',
-  'Henrique',
-  'Florbela',
-  'Jessie',
-  'Raina',
-  'Nélson',
-  'Bogdan',
-  'Edwin',
-  'Teotónio',
-  'Eduardo',
-  'Luara',
-  'Pietra',
-  'Giovany',
-  'Thayra',
-  'Jack',
-  'Santhiago',
-  'José',
-  'Brahim',
-  'Joshua',
-  'Charlotte',
-];

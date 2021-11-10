@@ -5,7 +5,6 @@ import {
   Image,
   View,
   TouchableOpacity,
-  Keyboard,
 } from 'react-native';
 import {COLORS, ICONS} from '../assets';
 import {useTheme} from '../context';
@@ -17,6 +16,7 @@ const Input = ({
   disabled,
   onChangeText = () => {},
   onBlur = () => {},
+  keyboardType = 'text',
   ...rest
 }) => {
   const [showPassword, setShowPassword] = useState(true);
@@ -43,6 +43,7 @@ const Input = ({
         }}
         onChangeText={v => !disabled && onChangeText(v)}
         focusable={!disabled}
+        keyboardType={keyboardType}
       />
       {secure && (
         <TouchableOpacity

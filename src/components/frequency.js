@@ -40,15 +40,13 @@ const Frequency = ({
       textShadowRadius: 1,
       textShadowColor: COLORS.gray,
     },
+    freeService: {tintColor: COLORS.white, height: 40, width: 40},
   });
 
   return (
     <View style={[s.container, style]}>
       {freeService ? (
-        <Image
-          source={ICONS.promotion}
-          style={{tintColor: COLORS.white, height: 40, width: 40}}
-        />
+        <Image source={ICONS.promotion} style={s.freeService} />
       ) : (
         <>
           <Text style={s.majorFrequency}>{frequency}</Text>

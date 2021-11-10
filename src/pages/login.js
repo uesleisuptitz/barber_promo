@@ -1,12 +1,13 @@
 import React, {useCallback, useState} from 'react';
-import {View, Text, StyleSheet, Alert, Keyboard} from 'react-native';
+import {View, Text, StyleSheet, Keyboard} from 'react-native';
 import {COLORS} from '../assets';
 import {Input, Button} from '../components';
-import {useAuth, useTheme} from '../context';
+import {useAuth, useNotification, useTheme} from '../context';
 import {userService} from '../services/user';
 
 const Login = () => {
   const {setUser} = useAuth();
+  const {handleNotification} = useNotification();
   const {background, text} = useTheme();
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
@@ -21,10 +22,10 @@ const Login = () => {
         setUser({uid, name, email});
       })
       .catch(e => {
-        Alert.alert('Ops!', e);
+        handleNotification('error', 'Ops! ' + e);
         setLoggingIn(false);
       });
-  }, [email, password, setUser, setLoggingIn]);
+  }, [email, password, setUser, handleNotification]);
 
   return (
     <View style={[s.container, {backgroundColor: background}]}>
@@ -33,8 +34,9 @@ const Login = () => {
       <Input
         placeholder="Email"
         value={email}
-        onChangeText={v => setEmail(v)}
+        onChangeText={v => setEmail(v.toLowerCase())}
         disabled={loggingIn}
+        keyboardType="email-address"
       />
       <Input
         placeholder="Senha"

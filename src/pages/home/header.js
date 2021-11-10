@@ -27,11 +27,15 @@ const Header = ({navigation}) => {
       <SearchHeader
         ref={searchHeaderRef}
         placeholder="Pesquisar"
-        onEnteringSearch={({nativeEvent: {text}}) => handleSearchClients(text)}
+        onEnteringSearch={({nativeEvent: {text: textSearch}}) =>
+          handleSearchClients(textSearch)
+        }
         onHide={() => {
           handleClearSearch();
           handleOpenOrCloseSearch();
-          if (searchHeaderRef?.current) searchHeaderRef.current.clear();
+          if (searchHeaderRef?.current) {
+            searchHeaderRef.current.clear();
+          }
         }}
         onFocus={handleOpenOrCloseSearch}
         enableSuggestion={false}

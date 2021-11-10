@@ -5,7 +5,7 @@ import React, {
   useEffect,
   useCallback,
 } from 'react';
-import {Alert} from 'react-native';
+import {useNotification} from '.';
 import {firestore} from '../services';
 import {userService} from '../services/user';
 
@@ -23,6 +23,7 @@ const AuthContext = createContext({
 
 export const AuthProvider = ({children}) => {
   const [user, setUser] = useState(UserProps);
+  const {handleNotification} = useNotification();
 
   useEffect(() => {
     userService.verifyLogin().then(loggedUSer => setUser(loggedUSer));
@@ -31,10 +32,12 @@ export const AuthProvider = ({children}) => {
   useEffect(() => {
     if (user?.uid && !user?.name) {
       firestore()
-        .collection(`users`)
+        .collection('users')
         .doc(user.uid)
         .onSnapshot(snapshot => {
-          if (snapshot) setUser({...user, ...snapshot.data()});
+          if (snapshot) {
+            setUser({...user, ...snapshot.data()});
+          }
         });
     }
   }, [user]);
@@ -45,8 +48,10 @@ export const AuthProvider = ({children}) => {
       .then(() => {
         setUser(UserProps);
       })
-      .catch(() => Alert.alert('Ops!', 'Ocorreu um erro ao tentar deslogar!'));
-  }, []);
+      .catch(() =>
+        handleNotification('error', 'Ops! Ocorreu um erro ao tentar deslogar!'),
+      );
+  }, [handleNotification, setUser]);
 
   return (
     <AuthContext.Provider value={{user, setUser, logout}}>

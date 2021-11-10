@@ -36,10 +36,3 @@ export const ClientProvider = ({children}) => {
 };
 
 export const useClient = () => useContext(ClientContext);
-
-export const withClientContext = ChildComponent => props =>
-  (
-    <ClientContext.Consumer>
-      {context => <ChildComponent {...props} client={context} />}
-    </ClientContext.Consumer>
-  );

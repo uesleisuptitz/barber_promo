@@ -1,10 +1,15 @@
 import React, {useEffect} from 'react';
-import {SafeAreaView} from 'react-native';
+import {SafeAreaView, StyleSheet} from 'react-native';
 
 import {AppNavigation} from './src/navigation';
-import {AuthProvider, ThemeProvider} from './src/context';
+import {
+  AuthProvider,
+  ThemeProvider,
+  NotificationsProvider,
+} from './src/context';
 import moment from 'moment';
 import SplashScreen from 'react-native-splash-screen';
+import {ModalNotification} from './src/components';
 
 moment.defineLocale('pt-br', {
   months:
@@ -60,14 +65,23 @@ const App = () => {
     SplashScreen.hide();
   }, []);
   return (
-    <AuthProvider>
-      <ThemeProvider>
-        <SafeAreaView style={{flex: 1}}>
-          <AppNavigation />
-        </SafeAreaView>
-      </ThemeProvider>
-    </AuthProvider>
+    <ThemeProvider>
+      <NotificationsProvider>
+        <AuthProvider>
+          <SafeAreaView style={s.safeAreaView}>
+            <AppNavigation />
+            <ModalNotification />
+          </SafeAreaView>
+        </AuthProvider>
+      </NotificationsProvider>
+    </ThemeProvider>
   );
 };
 
 export default App;
+
+const s = StyleSheet.create({
+  safeAreaView: {
+    flex: 1,
+  },
+});
