@@ -13,9 +13,9 @@ const NotificationsContext = createContext({
 });
 
 export const NotificationsProvider = ({children}) => {
-  const [open, setOpen] = useState(true);
-  const [type, setType] = useState('warning');
-  const [message, setMessage] = useState('Teste teste teste');
+  const [open, setOpen] = useState(false);
+  const [type, setType] = useState('');
+  const [message, setMessage] = useState('');
 
   const handleNotification = (
     notificationType = 'sucess',
