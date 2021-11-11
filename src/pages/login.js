@@ -29,8 +29,8 @@ const Login = () => {
 
   return (
     <View style={[s.container, {backgroundColor: background}]}>
-      <Text style={{color: text}}>Bem vindo(a) ao</Text>
-      <Text style={s.title}>Barber Promo</Text>
+      <Text style={{color: text}}>Bem vindo(a) ao app</Text>
+      <Text style={s.title}>Barbearia</Text>
       <Input
         placeholder="Email"
         value={email}
