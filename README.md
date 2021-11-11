@@ -5,7 +5,11 @@
 # Barbearia
 
 Esse projeto foi desnevolvido para a Barbearia Macedo gerenciar seus clientes. O app conta com cadastro de clientes, pesquisa de clientes (para agilizar o check-in no estabelecimento), registro e contagem de check-in para avisar sobre o serviço de cortesia. Também tem dark mode ; )
-  
+
+## Funcionamento
+
+![](https://github.com/uesleisuptitz/barber_promo/blob/master/src/assets/funcionamento.gif)
+
 ## Tecnologias
 
 As seguintes tecnologias foram usadas na construção do projeto:
