@@ -60,17 +60,21 @@ export const ClientsProvider = ({children}) => {
         });
       };
       const query = firestore().collection(`users/${user.uid}/clients`);
-      const unsuscribe = query.onSnapshot(handleGetClients, () =>
-        handleNotification(
-          'error',
-          'Ops! Ocorreu um erro ao tentar buscar seus clientes!',
-        ),
-      );
+      const unsuscribe = query.onSnapshot(handleGetClients, () => notify());
       return () => {
         unsuscribe();
       };
     }
-  }, [handleNotification, user.uid]);
+  }, [notify, user.uid]);
+
+  const notify = useCallback(
+    () =>
+      handleNotification(
+        'error',
+        'Ops! Ocorreu um erro ao tentar buscar seus clientes!',
+      ),
+    [handleNotification],
+  );
 
   const clearStringToSarch = useCallback(
     string =>

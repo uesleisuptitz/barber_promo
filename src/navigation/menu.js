@@ -52,7 +52,9 @@ const Menu = props => {
         <View style={s.content}>
           <View style={[s.row, s.line]}>
             <Text style={{color: text}}>{name}</Text>
-            <Text style={s.email}>{email}</Text>
+            <Text style={s.email} numberOfLines={1} ellipsizeMode="tail">
+              {email}
+            </Text>
           </View>
           <View style={[s.row, s.line]}>
             <Text style={{color: text}}>

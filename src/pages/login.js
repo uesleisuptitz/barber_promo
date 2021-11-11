@@ -34,7 +34,7 @@ const Login = () => {
       <Input
         placeholder="Email"
         value={email}
-        onChangeText={v => setEmail(v.toLowerCase())}
+        onChangeText={v => setEmail(v)}
         disabled={loggingIn}
         keyboardType="email-address"
       />

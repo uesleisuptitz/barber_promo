@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useCallback} from 'react';
 import {
   StyleSheet,
   Text,
@@ -56,10 +56,7 @@ const ClientHistory = () => {
         .collection(`users/${user.uid}/clients/${docId}/history`)
         .orderBy('date');
       const unsuscribe = query.onSnapshot(handleSetClientHistory, () =>
-        handleNotification(
-          'error',
-          'Ops! Ocorreu um erro ao tentar buscar o histórico desse cliente!',
-        ),
+        notify(),
       );
       return () => {
         unsuscribe();
@@ -67,7 +64,16 @@ const ClientHistory = () => {
         setLoading(true);
       };
     }
-  }, [docId, handleNotification, user]);
+  }, [docId, notify, user]);
+
+  const notify = useCallback(
+    () =>
+      handleNotification(
+        'error',
+        'Ops! Ocorreu um erro ao tentar buscar o histórico desse cliente!',
+      ),
+    [handleNotification],
+  );
 
   useEffect(() => {
     if (history?.length > 0 && history[0].freeService) {
